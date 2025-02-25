@@ -5,6 +5,8 @@ extends RichTextLabel
 @export var ShowTextArt:bool = true
 @export var CanInput:bool = false
 
+var commands:Dictionary = {}
+
 var TextArt:Array[String] = [
 	"┎┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┒",
 	"┇                 ████████        ███◤                        ┇",
@@ -38,8 +40,6 @@ var TextArtThin:Array[String] = [
 	"┖┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┚"
 	]
 
-var _console_lines: Array[String] = []
-
 var CurrentInputString: String = ""
 var CurrentInputString_escaped: String = ""
 var _current_cursor_pos: int = 0
@@ -50,11 +50,16 @@ var _start_up:int = 0
 var _just_enter: bool = false
 var _PrefixText: String = ""
 
+var _send_history: Array[String] = []
+var _current_history : int = -1
+var _last_input: String = ""
+
 func _ready() -> void:
 	size = Vector2(console_size.x * 12.5, console_size.y * 23)
+	_built_in_command_init()
 	add_child(_flash_timer)
 	text = ""
-	_PrefixText = "[bgcolor=DODGER_BLUE]"+USER_Name+"[/bgcolor][bgcolor=#7f7f7f][color=DODGER_BLUE]\u25E3[/color]\u2302[/bgcolor][color=#7f7f7f]\u25B6[/color]"
+	_PrefixText = "[bgcolor=DODGER_BLUE]"+USER_Name+"[/bgcolor][bgcolor=WEB_GRAY][color=DODGER_BLUE]\u25E3[/color]\u2302[/bgcolor][color=WEB_GRAY]\u25B6[/color]"
 	_flash_timer.set_one_shot(true)
 	_flash_timer.start(1)
 	
@@ -151,6 +156,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				_flash = true
 				if _current_cursor_pos > 0:
 					_current_cursor_pos -= 1
+			"Up":
+				append_history()
+			"Down":
+				append_history(false)
 				
 			# Unpacthed
 			_: print(event.as_text())
@@ -169,8 +178,8 @@ func append_current_input_string(enter:bool) -> void:
 				append_text(_PrefixText + CurrentInputString_escaped + "\u2581")
 			elif _current_cursor_pos > 0:
 				append_text(_PrefixText + CurrentInputString_escaped.left(-_current_cursor_pos))
-				push_bgcolor(Color("#ffffff"))
-				push_color(Color("#000000"))
+				push_bgcolor(Color("WHITE"))
+				push_color(Color("BLACK"))
 				append_text(CurrentInputString_escaped[-_current_cursor_pos])
 				pop()
 				pop()
@@ -189,6 +198,11 @@ func append_current_input_string(enter:bool) -> void:
 		append_text(_PrefixText + CurrentInputString_escaped)
 		pop()
 		newline()
+		process(CurrentInputString)
+		if CurrentInputString != "":
+			_send_history.append(CurrentInputString)
+		_current_history = -1
+		_last_input = ""
 		CurrentInputString = ""
 		CurrentInputString_escaped = ""
 		_just_enter = true
@@ -198,3 +212,76 @@ func insert_character(character:String) -> void:
 		CurrentInputString += character
 	elif _current_cursor_pos > 0:
 		CurrentInputString = CurrentInputString.insert(CurrentInputString.length() -_current_cursor_pos,character)
+
+func append_history(up:bool = true) -> void:
+	_current_cursor_pos = 0
+	if _current_history == -1:
+		_last_input = CurrentInputString
+	if _send_history.size() != 0:
+		if up:
+			if _current_history == -1:
+				_current_history = _send_history.size() -1
+			elif _current_history != 0:
+				_current_history -= 1
+		else:
+			if _current_history == -1:
+				pass
+			elif _current_history == _send_history.size() -1:
+				_current_history = -1
+			elif _current_history < _send_history.size() -1:
+				_current_history += 1
+	if _send_history.size() != 0 and _current_history != -1 and _current_history <= _send_history.size() -1:
+		CurrentInputString = _send_history[_current_history]
+	else:
+		_current_history = -1
+		CurrentInputString = _last_input
+	
+func process(command):
+	if !commands.keys().has(CurrentInputString.get_slice("(",0)):
+		push_paragraph(HORIZONTAL_ALIGNMENT_LEFT)
+		append_text("[color=RED]Command not found:[/color] " + CurrentInputString.get_slice("(",0))
+		pop()
+		newline()
+	else:
+		var commandData = commands[CurrentInputString.get_slice("(",0)]
+		var argu_in:Array[String] = []
+		if CurrentInputString.contains("("):
+			argu_in.append_array(CurrentInputString.get_slice("(",1).trim_suffix(")").split(","))
+		if commandData.function.get_argument_count() != argu_in.size():
+			push_paragraph(HORIZONTAL_ALIGNMENT_LEFT)
+			append_text("[color=RED]Parameter count mismatch[/color]: expect %s, got %s." \
+							% [str(commandData.function.get_argument_count()),argu_in])
+			pop()
+		else:
+			commandData.function.callv(argu_in)
+	
+func add_command(id:String, function:Callable, functionInstance:Object, helpText:String="", getFunction=null):
+	commands[id] = EC_CommandClass.new(id, function, functionInstance, helpText, getFunction)
+
+func _built_in_command_init():
+	add_command(
+		"help", 
+		func():
+			for i in commands:
+				append_text("<"+i+"> "+commands[i].helpText)
+				pop_all()
+				newline(),
+		self,
+		"Show all of the valid command."
+	)
+	add_command(
+		"clear", 
+		func():
+			clear()
+			return,
+		self,
+		"Clears the console."
+	)
+	add_command(
+		"echo", 
+		func(input:String):
+			append_text(input)
+			pop_all(),
+		self,
+		"Repeat what you say."
+	)
