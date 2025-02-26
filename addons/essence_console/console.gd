@@ -58,7 +58,11 @@ var _send_history: Array[String] = []
 var _current_history : int = -1
 var _last_input: String = ""
 
+@export var SetLocaleToEng: bool = false
+
 func _ready() -> void:
+	if SetLocaleToEng:
+		TranslationServer.set_locale("en_US")
 	size = Vector2(console_size.x * 12.5, console_size.y * 23)
 	_built_in_command_init()
 	add_child(_flash_timer)
@@ -146,6 +150,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			"Shift+Period":			insert_character(">")
 			"Shift+Slash":			insert_character("?")
 			# Special action
+			"Shift":
+				pass
 			"Backspace","Shift+Backspace":
 				if _current_cursor_pos == 0:
 					CurrentInputString = CurrentInputString.left(CurrentInputString.length()-1)
@@ -263,7 +269,7 @@ func process(command):
 	command = command.replace("\\)", "[rp]")
 	if !commands.keys().has(command.get_slice("(",0)):
 		push_paragraph(HORIZONTAL_ALIGNMENT_LEFT)
-		append_text("[color=RED]Command not found:[/color] " + command.get_slice("(",0))
+		append_text("[color=RED]" + tr("error.command_not_found") + "[/color] " + command.get_slice("(",0))
 		pop()
 		newline()
 	else:
@@ -279,25 +285,34 @@ func process(command):
 				argu_in_unesc.append(i)
 		if commandData.function.get_argument_count() != argu_in.size():
 			push_paragraph(HORIZONTAL_ALIGNMENT_LEFT)
-			append_text("[color=RED]Parameter count mismatch:[/color] expect %s, got %s." \
+			append_text("[color=RED]" + tr("error.parameter_count_mismatch") + "[/color] " + tr("error.parameter_count_mismatch.expect_got") \
 							% [str(commandData.function.get_argument_count()),argu_in_unesc])
 			pop()
 		else:
 			commandData.function.callv(argu_in_unesc)
 	
-func add_command(id:String, function:Callable, functionInstance:Object, helpText:String="", getFunction=null):
-	commands[id] = EC_CommandClass.new(id, function, functionInstance, helpText, getFunction)
+func add_command(id:String, function:Callable, functionInstance:Object, helpText:String="", helpDetail:String = ""):
+	commands[id] = EC_CommandClass.new(id, function, functionInstance, helpText, helpDetail)
 
 func _built_in_command_init():
 	add_command(
 		"help", 
-		func():
-			for i in commands:
-				append_text("<"+i+"> "+commands[i].helpText)
-				pop_all()
-				newline(),
+		func(id:String):
+			if id == "":
+				for i in commands:
+					append_text("<"+i+"> "+commands[i].helpText)
+					pop_all()
+					newline()
+				return
+			elif commands.keys().has(id):
+				append_text(commands[id].helpDetail)
+			else:
+				append_text("[color=RED]" + tr("error.command_not_found") + "[/color] " + id)
+			pop_all()
+			newline(),
 		self,
-		"Show all of the valid command."
+		tr("help.help"),
+		tr("help.help.detail")
 	)
 	add_command(
 		"clear", 
@@ -305,7 +320,8 @@ func _built_in_command_init():
 			clear()
 			return,
 		self,
-		"Clears the console."
+		tr("help.clear"),
+		tr("help.clear.detail")
 	)
 	add_command(
 		"echo", 
@@ -313,7 +329,8 @@ func _built_in_command_init():
 			append_text(input)
 			pop_all(),
 		self,
-		"Repeat what you say."
+		tr("help.echo"),
+		tr("help.echo.detail")
 	)
 	
 	# File system
@@ -328,7 +345,8 @@ func _built_in_command_init():
 				current_path = "/home"
 			pop_all(),
 		self,
-		"Display current directory."
+		tr("help.current_dir"),
+		tr("help.current_dir.detail")
 	)
 	add_command(
 		"dir",
@@ -336,7 +354,7 @@ func _built_in_command_init():
 			var path_instance = get_path_instance(current_path)
 			if !path_instance.has(null):
 				for i in path_instance:
-					var icon = "?"
+					var icon = "\uFFFD"
 					if path_instance[i] == null:
 						icon = "\u2613"
 					if path_instance[i] is String:
@@ -366,7 +384,8 @@ func _built_in_command_init():
 				current_path = "/home"
 			pop_all(),
 		self,
-		"List the directories and files in the current directory."
+		tr("help.dir"),
+		tr("help.dir.detail")
 	)
 	add_command(
 		"changeDir",
@@ -377,7 +396,8 @@ func _built_in_command_init():
 				append_text(get_path_instance(path).get(null))
 			pop_all(),
 		self,
-		"Change the path to the corresponding directory."
+		tr("help.change_dir"),
+		tr("help.change_dir.detail")
 	)
 	add_command(
 		"makeDir",
@@ -388,14 +408,15 @@ func _built_in_command_init():
 					if !path_instance.has(folder_name):
 						path_instance.get_or_add(folder_name,{})
 					else:
-						append_text("[i]" + folder_name + "[/i] is already exist.")
+						append_text("[i]" + folder_name + "[/i] " + tr("error.already_exist"))
 				else:
 					append_text(path_instance.get(null))
 			else:
-				append_text("[color=RED]Invalid folder name:[/color][i]" + folder_name + "[/i], The file name cannot contain any of the following characters: [b]:/\\?*|%<>[/b]")
+				append_text("[color=RED]" + tr("error.invalid_file_name") + "[/color] [i]" + folder_name + "[/i]" + tr("error.invalid_file_name.hint") + " [b]:/\\?*|%<>[/b]")
 			pop_all(),
 		self,
-		"Create a directory."
+		tr("help.make_dir"),
+		tr("help.make_dir.detail")
 	)
 	add_command(
 		"makeFile",
@@ -406,14 +427,15 @@ func _built_in_command_init():
 					if !path_instance.has(file_name):
 						path_instance.get_or_add(file_name,"")
 					else:
-						append_text("[i]" + file_name + "[/i] is already exist.")
+						append_text("[i]" + file_name + "[/i] " + tr("error.already_exist"))
 				else:
 					append_text(path_instance.get(null))
 			else:
-				append_text("[color=RED]Invalid file name:[/color][i]" + file_name + "[/i], The file name cannot contain any of the following characters: [b]:/\\?*|%<>[/b]")
+				append_text("[color=RED]" + tr("error.invalid_file_name") + "[/color] [i]" + file_name + "[/i]" + tr("error.invalid_file_name.hint") + " [b]:/\\?*|%<>[/b]")
 			pop_all(),
 		self,
-		"Create a file."
+		tr("help.make_file"),
+		tr("help.make_file.detail")
 	)
 	add_command(
 		"remove",
@@ -423,12 +445,13 @@ func _built_in_command_init():
 				if path_instance.has(file_name):
 					path_instance.erase(file_name)
 				else:
-					append_text("[i]" + file_name + "[/i] does not exist.")
+					append_text("[i]" + file_name + "[/i] " + tr("error.not_exist"))
 			else:
 				append_text(path_instance.get(null))
 			pop_all(),
 		self,
-		"Remove a file or directory."
+		tr("help.remove"),
+		tr("help.remove.detail")
 	)
 	add_command(
 		"rename",
@@ -441,16 +464,17 @@ func _built_in_command_init():
 							path_instance.get_or_add(to_name,path_instance.get(file_name).duplicate(true))
 							path_instance.erase(file_name)
 						else:
-							append_text("[i]" + to_name + "[/i] is already exist.")
+							append_text("[i]" + to_name + "[/i] " + tr("error.already_exist"))
 					else:
-						append_text("[color=RED]Invalid folder name:[/color][i]" + to_name + "[/i], The file name cannot contain any of the following characters: [b]:/\\?*|%<>[/b]")
+						append_text("[color=RED]" + tr("error.invalid_file_name") + "[/color][i]" + to_name + "[/i]" + tr("error.invalid_file_name.hint") + " [b]:/\\?*|%<>[/b]")
 				else:
-					append_text("[i]" + file_name + "[/i] does not exist.")
+					append_text("[i]" + file_name + "[/i] " + tr("error.not_exist"))
 			else:
 				append_text(path_instance.get(null))
 			pop_all(),
 		self,
-		"Change the name of a file or directory."
+		tr("help.rename"),
+		tr("help.remane.detail")
 	)
 	add_command(
 		"copy",
@@ -466,18 +490,19 @@ func _built_in_command_init():
 							if !result_path_instance.has(to_name):
 								result_path_instance.get_or_add(to_name,path_instance.get(file_name).duplicate(true))
 							else:
-								append_text("[i]" + to_name + "[/i] is already exist.")
+								append_text("[i]" + to_name + "[/i] " + tr("error.already_exist"))
 						else:
-							append_text("[color=RED]Invalid file or directory name:[/color][i]" + to_name + "[/i], The file name cannot contain any of the following characters: [b]:/\\?*|%<>[/b]")
+							append_text("[color=RED]" + tr("error.invalid_file_name") + "[/color][i]" + to_name + "[/i]" + tr("error.invalid_file_name.hint") + " [b]:/\\?*|%<>[/b]")
 					else:
 						append_text(result_path_instance.get(null))
 				else:
-					append_text("[i]" + file_name + "[/i] does not exist.")
+					append_text("[i]" + file_name + "[/i] " + tr("error.not_exist"))
 			else:
 				append_text(path_instance.get(null))
 			pop_all(),
 		self,
-		"Copy a file or directory to another corresponding directory and apply a new name."
+		tr("help.copy"),
+		tr("help.copy.detail")
 	)
 	add_command(
 		"move",
@@ -491,16 +516,17 @@ func _built_in_command_init():
 							result_path_instance.get_or_add(file_name,path_instance.get(file_name).duplicate(true))
 							path_instance.erase(file_name)
 						else:
-							append_text("[i]" + file_name + "[/i] is already exist.")
+							append_text("[i]" + file_name + "[/i] " + tr("error.already_exist"))
 					else:
 						append_text(result_path_instance.get(null))
 				else:
-					append_text("[i]" + file_name + "[/i] does not exist.")
+					append_text("[i]" + file_name + "[/i] " + tr("error.not_exist"))
 			else:
 				append_text(path_instance.get(null))
 			pop_all(),
 		self,
-		"Move a file or directory to another corresponding directory."
+		tr("help.move"),
+		tr("help.move.detail")
 	)
 	
 	
@@ -510,7 +536,7 @@ func _built_in_command_init():
 			var expression = Expression.new()
 			var error = expression.parse(command)
 			if error != OK:
-				append_text("[color=RED]Parsing failed:[/color] " + expression.get_error_text())
+				append_text("[color=RED]" + tr("error.parse") + "[/color] " + expression.get_error_text())
 				pop_all()
 			else:
 				var result = expression.execute()
@@ -518,7 +544,8 @@ func _built_in_command_init():
 					append_text(str(result))
 					pop_all(),
 		self,
-		"Parse and execute input commands."
+		tr("help.parse"),
+		tr("help.parse.detail")
 	)
 
 func return_path_string(path:String) -> String:
@@ -539,14 +566,14 @@ func get_path_instance(path:String,goto:bool=false) -> Dictionary:
 	for i in path_array:
 		if i != "":
 			if !current_path_instance.has(i):
-				return {null:"[i]" + path + "[/i] does not exist."}
+				return {null:"[i]" + path + "[/i] " + tr("error.not_exist")}
 			elif current_path_instance.get(i) is Dictionary:
 				current_path_instance = current_path_instance[i]
 			else:
-				return {null:"[i]" + path + "[/i] is not a valid directory."}
+				return {null:"[i]" + path + "[/i] " + tr("error.not_valid_directory")}
 	if goto:
 		current_path = ""
 		for i in path_array:
-			if i != "":
+			if i != "" and i != ".":
 				current_path += "/" + i
 	return current_path_instance

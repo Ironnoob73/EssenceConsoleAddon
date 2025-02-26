@@ -1,0 +1,99 @@
+# LD_Anvil, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Essence Console Addon\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_US\n"
+
+msgid "essence_console_addon.name"
+msgstr "Essence Console Addon"
+
+msgid "error.command_not_found"
+msgstr "Command not found:"
+
+msgid "error.parameter_count_mismatch"
+msgstr "Parameter count mismatch:"
+msgid "error.parameter_count_mismatch.expect_got"
+msgstr "expect %s, got %s."
+
+msgid "error.already_exist"
+msgstr "is already exist."
+msgid "error.not_exist"
+msgstr "does not exist."
+
+msgid "error.invalid_file_name"
+msgstr "Invalid file name:"
+msgid "error.invalid_file_name.hint"
+msgstr ", The file name cannot contain any of the following characters:"
+
+msgid "error.not_valid_directory"
+msgstr "is not a valid directory."
+
+msgid "help.help"
+msgstr "Show all of the valid command. Use [b]help([Command ID])[/b] to get more information."
+msgid "help.help.detail"
+msgstr "help([Command ID: String])\nFirst enter the command ID, then enter the parameters in the parentheses(\"(\"). Use commas(\",\") to separate each parameters. The ending parentheses(\")\") can be omitted.\nYou can use backslash(\"\\,\",\"\\(\",\"\\)\") or [b][comma][/b], [b][lp][/b], [b][rp][/b] to escape commas and parentheses respectively.If the command parameter can be left blank, you still need to enter the parentheses and the [b]corresponding number[/b] of commas. If the command does not require parameters, you [b]must not enter[/b] the parentheses."
+
+msgid "help.clear"
+msgstr "Clears the console."
+msgid "help.clear.detail"
+msgstr "[i]This command needs no parameter.[/i]"
+
+msgid "help.echo"
+msgstr "Repeat what you say."
+msgid "help.echo.detail"
+msgstr "echo([Input])\nPrint the string you input, supporting bbcode style."
+
+msgid "help.current_dir"
+msgstr "Display current directory."
+msgid "help.current_dir.detail"
+msgstr "[i]This command needs no parameter.[/i]"
+
+msgid "help.dir"
+msgstr "List the directories and files in the current directory."
+msgid "help.dir.detail"
+msgstr "[i]This command needs no parameter.[/i]\nPrint out the files and directories in the current path and mark their types in the form of icons. Red file names indicate illegal file names."
+
+msgid "help.change_dir"
+msgstr "Change the path to the corresponding directory."
+msgid "help.change_dir.detail"
+msgstr "changeDir([Path])\nChanges the current directory to the specified path. Use a leading backslash(\"/\") to indicate the root directory. Leave it blank or a period(\".\") to indicate the current directory. Two periods(\"..\") indicate the parent directory."
+
+msgid "help.make_dir"
+msgstr "Create a directory."
+msgid "help.make_dir.detail"
+msgstr "makeDir([Folder Name])"
+
+msgid "help.make_file"
+msgstr "Create a file."
+msgid "help.make_file.detail"
+msgstr "makeFile([File Name])"
+
+msgid "help.remove"
+msgstr "Remove a file or directory."
+msgid "help.remove.detail"
+msgstr "remove([File Name])"
+
+msgid "help.rename"
+msgstr "Change the name of a file or directory."
+msgid "help.rename.detail"
+msgstr "rename([File Name],[The name will applied])"
+
+msgid "help.copy"
+msgstr "Copy a file or directory to another corresponding directory and apply a new name."
+msgid "help.copy.detail"
+msgstr "copy([File Name],[Path],[The name will applied])\nThe last two parameters can be left blank. If the path is left blank, the current path is used. if the name to be used is left blank, the original file name is used."
+
+msgid "help.move"
+msgstr "Move a file or directory to another corresponding directory."
+msgid "help.move.detail"
+msgstr "move([File Name],[Path])"
+
+msgid "help.parse"
+msgstr "Parse and execute input expression."
+msgid "help.parse.detail"
+msgstr "parse([Expression])\nCan perform mathematical calculations (such as 1+1, which will output 2) or some Godot script functions (such as print)."
+msgid "error.parse"
+msgstr "Parsing failed:"

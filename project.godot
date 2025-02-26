@@ -31,6 +31,10 @@ theme/default_font_antialiasing=0
 theme/default_font_hinting=0
 theme/default_font_subpixel_positioning=0
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://addons/essence_console/lang/en_US.po", "res://addons/essence_console/lang/zh_CN.po")
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

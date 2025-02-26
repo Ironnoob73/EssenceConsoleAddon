@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://divngw0b3efrf"]
+[gd_scene load_steps=6 format=3 uid="uid://divngw0b3efrf"]
 
 [ext_resource type="FontFile" uid="uid://dniffowapljdy" path="res://addons/essence_console/hailtotem_next.ttf" id="1_3mvg0"]
 [ext_resource type="Script" path="res://addons/essence_console/console.gd" id="1_73s1d"]
@@ -14,8 +14,6 @@ variation_transform = Transform2D(1.25, 0.25, 0, 1.1, 0, 0)
 [sub_resource type="FontVariation" id="FontVariation_mjky1"]
 base_font = ExtResource("1_3mvg0")
 variation_transform = Transform2D(1.25, 0, 0, 1.1, 0, 0)
-
-[sub_resource type="GDScript" id="GDScript_g7v1k"]
 
 [node name="Console" type="RichTextLabel"]
 anchors_preset = 15
@@ -39,16 +37,3 @@ bbcode_enabled = true
 scroll_active = false
 scroll_following = true
 script = ExtResource("1_73s1d")
-fileDirectory = {
-"config": {},
-"home": {
-false: "ee",
-0: "int",
-0.8: "float",
-"false": "f2",
-"file0": "text",
-"folder0": {},
-"nullname": null,
-"script0": SubResource("GDScript_g7v1k")
-}
-}

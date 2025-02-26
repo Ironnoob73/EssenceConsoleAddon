@@ -1,0 +1,99 @@
+# LD_Anvil, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Essence Console Addon\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
+
+msgid "essence_console_addon.name"
+msgstr "本质控制台插件"
+
+msgid "error.command_not_found"
+msgstr "没有找到命令："
+
+msgid "error.parameter_count_mismatch"
+msgstr "参数数量不匹配："
+msgid "error.parameter_count_mismatch.expect_got"
+msgstr "需要 %s 个，得到 %s。"
+
+msgid "error.already_exist"
+msgstr "已存在。"
+msgid "error.not_exist"
+msgstr "不存在。"
+
+msgid "error.invalid_file_name"
+msgstr "无效的文件名："
+msgid "error.invalid_file_name.hint"
+msgstr "，文件名不能包含下列任何字符："
+
+msgid "error.not_valid_directory"
+msgstr "不是有效的目录。"
+
+msgid "help.help"
+msgstr "展示所有可用命令。输入[b]help([命令名])[/b]获取更多信息。"
+msgid "help.help.detail"
+msgstr "help([命令名])\n首先输入命令名，然后在括号(\"(\")内输入参数。使用英文逗号(\",\")分隔参数。末尾的括号(\")\")可以省略。\n你可以使用反斜杠(\"\\,\",\"\\(\",\"\\)\")或[b][comma][/b]、[b][lp][/b]、[b][rp][/b]对逗号和左右括号分别进行转义。如果命令参数可以留空，依旧需要输入括号和[b]对应数量[/b]的逗号。如果命令不需要参数，则[b]不可[/b]输入括号。"
+
+msgid "help.clear"
+msgstr "清空控制台。"
+msgid "help.clear.detail"
+msgstr "[i]这条指令不需要参数。[/i]"
+
+msgid "help.echo"
+msgstr "重复你的输入。"
+msgid "help.echo.detail"
+msgstr "echo([输入])\n打印你输入的文字。支持BBCode样式。"
+
+msgid "help.current_dir"
+msgstr "显示当前路径。"
+msgid "help.current_dir.detail"
+msgstr "[i]这条指令不需要参数。[/i]"
+
+msgid "help.dir"
+msgstr "列出当前目录下的目录和文件。"
+msgid "help.dir.detail"
+msgstr "[i]这条指令不需要参数。[/i]\n打印出当前路径下的文件和目录，并以图标的形式标注其类型，红色文件名表示非法文件名。"
+
+msgid "help.change_dir"
+msgstr "更改路径到对应的目录。"
+msgid "help.change_dir.detail"
+msgstr "changeDir([路径])\n根据指定路径移至对应目录。在开头使用反斜杠(\"/\")表示根目录。留空或使用英文句号(\".\")表示当前目录。两个英文句号(\"..\")表示父级目录。"
+
+msgid "help.make_dir"
+msgstr "创建一个目录。"
+msgid "help.make_dir.detail"
+msgstr "makeDir([文件夹名])"
+
+msgid "help.make_file"
+msgstr "创建一个文件。"
+msgid "help.make_file.detail"
+msgstr "makeFile([文件名])"
+
+msgid "help.remove"
+msgstr "删除一个文件或目录。"
+msgid "help.remove.detail"
+msgstr "remove([文件名])"
+
+msgid "help.rename"
+msgstr "更改一个文件或目录的名称。"
+msgid "help.rename.detail"
+msgstr "rename([文件名],[将要使用的名称])"
+
+msgid "help.copy"
+msgstr "复制一个文件或目录至另一个指定目录并更改名称。"
+msgid "help.copy.detail"
+msgstr "copy([文件名],[路径],[将要使用的名称])\n后两个参数可以留空。若路径留空则使用当前路径，若将要使用的名称留空则使用原文件名。"
+
+msgid "help.move"
+msgstr "移动一个文件或目录至指定目录。"
+msgid "help.move.detail"
+msgstr "move([文件名],[路径])"
+
+msgid "help.parse"
+msgstr "解析并执行输入的表达式。"
+msgid "help.parse.detail"
+msgstr "parse([表达式])\n可以执行数学计算（如1+1，会输出2）或部分Godot脚本函数（如print）。"
+msgid "error.parse"
+msgstr "解析失败："

@@ -4,11 +4,11 @@ var id: String
 var function: Callable
 var functionInstance: Object
 var helpText: String
-var getFunction
+var helpDetail: String
 
-func _init(id:String, function:Callable, functionInstance: Object, helpText:String="", getFunction=null):
+func _init(id:String, function:Callable, functionInstance: Object, helpText:String="", helpDetail:String = ""):
 	self.id = id
 	self.function = function
 	self.functionInstance = functionInstance
 	self.helpText = helpText
-	if getFunction != null: self.getFunction = getFunction
+	self.helpDetail = helpDetail
