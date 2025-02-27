@@ -37,3 +37,32 @@ bbcode_enabled = true
 scroll_active = false
 scroll_following = true
 script = ExtResource("1_73s1d")
+fileDirectory = {
+"config": {},
+"home": {
+"Array0": [],
+"Bool0": false,
+"Bool1": true,
+"Dir0": {},
+"Dir1": {
+"ROFile": "test"
+},
+"File0": "",
+"File1": "text",
+"Float0": 0.0,
+"Float1": 2.5,
+"Int0": 0,
+"Int1": 1,
+"NullFile": null,
+"PackInt0": PackedInt32Array(),
+"PackInt1": PackedInt32Array(1),
+"PackStr0": PackedStringArray(),
+"PackStr1": PackedStringArray("aaa"),
+"Path0": NodePath(""),
+"Path1": NodePath("."),
+"StrName0": &"",
+"StrName1": &"test",
+"Vec": Vector2(0, 0)
+}
+}
+SetLocaleToEng = true
