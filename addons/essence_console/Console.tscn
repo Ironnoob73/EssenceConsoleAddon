@@ -42,6 +42,7 @@ script = ExtResource("1_73s1d")
 fileDirectory = {
 "config": {},
 "home": {
+"FileTypeTest": {
 "Array0": [],
 "Bool0": false,
 "Bool1": true,
@@ -66,6 +67,7 @@ fileDirectory = {
 "StrName0": &"",
 "StrName1": &"test",
 "Vec": Vector2(0, 0)
+}
 }
 }
 SetLocaleToEng = true

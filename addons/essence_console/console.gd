@@ -220,8 +220,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				
 			# Unpacthed
 			_: print(event.as_text())
-		CurrentInputString_escaped = CurrentInputString.replace("[", "[lb]")
-		CurrentInputString_escaped = CurrentInputString.replace("\n", "\u2B92\n")
+		CurrentInputString_escaped = CurrentInputString.replace("[", "[lb]").replace("\n", "\u2B92\n")
 		append_current_input_string()
 		_just_enter = false
 
@@ -430,8 +429,8 @@ func _built_in_command_init():
 		"currentDir",
 		func():
 			var path_instance = get_path_instance(current_path)
-			if path_instance.has(null):
-				pass
+			if !path_instance.has(null):
+				append_text(current_path)
 			else:
 				append_text(path_instance.get(null))
 				current_path = "/home"
