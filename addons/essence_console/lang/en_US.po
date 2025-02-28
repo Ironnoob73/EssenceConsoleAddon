@@ -111,6 +111,13 @@ msgstr "Output the contents of a file."
 msgid "help.read.detail"
 msgstr "read([File Name])"
 
+msgid "help.edit"
+msgstr "Edit a file."
+msgid "help.edit.detail"
+msgstr "edit([File Name])\nThis will start the edit mode, and carriage return will become a line feed. \n<Ctrl+S> Save the file\n<Ctrl+X> Exit edit mode"
+msgid "error.cant_edit"
+msgstr "This file type does not support editing."
+
 msgid "help.character_test"
 msgstr "Print characters for visual inspection."
 msgid "help.character_test.detail"

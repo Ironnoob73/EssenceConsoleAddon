@@ -111,6 +111,13 @@ msgstr "输出一个文件的内容。"
 msgid "help.read.detail"
 msgstr "read([文件名])"
 
+msgid "help.edit"
+msgstr "对一个文件进行编辑。"
+msgid "help.edit.detail"
+msgstr "edit([文件名])\n这将开启编辑模式，回车变为换行。\n<Ctrl+S> 保存文件\n<Ctrl+X> 退出编辑模式"
+msgid "error.cant_edit"
+msgstr "该文件类型不支持编辑。"
+
 msgid "help.character_test"
 msgstr "打印字符进行视觉检查。"
 msgid "help.character_test.detail"
